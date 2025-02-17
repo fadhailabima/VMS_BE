@@ -11,6 +11,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@prisma/client": "^6.2.1",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.3",
     "connect-livereload": "^0.6.1",
     "cookie-parser": "^1.4.7",
