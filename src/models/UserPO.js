@@ -1,45 +1,27 @@
 const { PrismaClient, Prisma } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-const getAllUserPO = async () => {
-  //   return await prisma.$queryRaw`
-  //       SELECT
-  //          user_po.no_po,
-  //          user_penawaran.no_penawaran,
-  //          user.nama_perusahaan,
-  //          user_product.brand,
-  //          user_po.tanggal_dibuat_po,
-  //          user_po.tanggal_mulai_po,
-  //          user_po.tanggal_berakhir_po,
-  //          user_po.Terms_of_Payment,
-  //          user_po.Terms_of_Delivery,
-  //          user_po.description
-  //       FROM user_po
-  //       LEFT JOIN user ON user_po.id_user = user.id_user
-  //       LEFT JOIN user_penawaran ON user_po.no_penawaran = user_penawaran.no_penawaran
-  //       LEFT JOIN user_product ON user_po.id_product = user_product.id_product
-  //     `;
-};
+const getAllUserPO = async () => {};
 
 const getUserPO = async () => {
   return await prisma.$queryRaw`
-      SELECT 
-        user_po.id_po,
-         user_po.no_po,
-         user_penawaran.no_penawaran,
-         user.nama_perusahaan,
-         user_product.brand,
-         user_po.tanggal_dibuat_po,
-         user_po.tanggal_mulai_po,
-         user_po.tanggal_berakhir_po,
-         user_po.Terms_of_Payment,
-         user_po.Terms_of_Delivery,
-         user_po.description
-      FROM user_po
-      LEFT JOIN user ON user_po.id_user = user.id_user
-      LEFT JOIN user_penawaran ON user_po.no_penawaran = user_penawaran.no_penawaran
-      LEFT JOIN user_product ON user_po.id_product = user_product.id_product
-    `;
+    SELECT 
+      "User_PO".id_po,
+      "User_PO".no_po,
+      "User_Penawaran".no_penawaran,
+      "User".nama_perusahaan,
+      "User_Product".brand,
+      "User_PO".tanggal_dibuat_po,
+      "User_PO".tanggal_mulai_po,
+      "User_PO".tanggal_berakhir_po,
+      "User_PO"."Terms_of_Payment",
+      "User_PO"."Terms_of_Delivery",
+      "User_PO".description
+    FROM "User_PO"
+    LEFT JOIN "User" ON "User_PO".id_user = "User".id_user
+    LEFT JOIN "User_Penawaran" ON "User_PO".no_penawaran = "User_Penawaran".no_penawaran
+    LEFT JOIN "User_Product" ON "User_PO".id_product = "User_Product".id_product
+  `;
 };
 
 const createUserPO = async (data) => {
@@ -49,9 +31,9 @@ const createUserPO = async (data) => {
       no_penawaran: data.no_penawaran,
       id_user: data.id_user,
       id_product: data.id_product,
-      tanggal_dibuat_po: data.tanggal_dibuat_po,
-      tanggal_mulai_po: data.tanggal_mulai_po,
-      tanggal_berakhir_po: data.tanggal_berakhir_po,
+      tanggal_dibuat_po: new Date(data.tanggal_dibuat_po).toISOString(),
+      tanggal_mulai_po: new Date(data.tanggal_mulai_po).toISOString(),
+      tanggal_berakhir_po: new Date(data.tanggal_berakhir_po).toISOString(),
       Terms_of_Payment: data.Terms_of_Payment,
       Terms_of_Delivery: data.Terms_of_Delivery,
       description: data.description,
@@ -75,24 +57,6 @@ const getUserPODetail = async (id_po) => {
   });
 
   return data;
-  //   return await prisma.$queryRaw`
-  //   SELECT
-  //     user_po.no_po,
-  //     user_penawaran.no_penawaran,
-  //     user.nama_perusahaan,
-  //     user_product.brand,
-  //     user_po.tanggal_dibuat_po,
-  //     user_po.tanggal_mulai_po,
-  //     user_po.tanggal_berakhir_po,
-  //     user_po.Terms_of_Payment,
-  //     user_po.Terms_of_Delivery,
-  //     user_po.description
-  //   FROM user_po
-  //   LEFT JOIN user ON user_po.id_user = user.id_user
-  //   LEFT JOIN user_penawaran ON user_po.no_penawaran = user_penawaran.no_penawaran
-  //   LEFT JOIN user_product ON user_po.id_product = user_product.id_product
-  //   WHERE user_po.no_po = ${no_po}
-  // `;
 };
 
 const deleteUserPO = async (id_po) => {
@@ -122,6 +86,41 @@ const updateUserPO = async (id_po, data) => {
   });
 };
 
+const getUserPOByPenawaranUserId = async (id_user) => {
+  try {
+    const data = await prisma.$queryRaw`
+      SELECT 
+        "User_PO"."id_po",
+        "User_PO"."no_po",
+        "User_PO"."tanggal_dibuat_po",
+        "User_PO"."tanggal_mulai_po",
+        "User_PO"."tanggal_berakhir_po",
+        "User_PO"."Terms_of_Payment",
+        "User_PO"."Terms_of_Delivery",
+        "User_PO"."description",
+        "User_Penawaran"."id_penawaran",
+        "User_Penawaran"."no_penawaran",
+        "User_Product"."brand",
+        "User_Product"."price",
+        "mst_kurs"."id_kurs",
+        "mst_kurs"."nama_kurs",
+        "User_Product"."stock",
+        "mst_satuan"."id_satuan",
+        "mst_satuan"."nama_satuan"
+      FROM "User_PO"
+      LEFT JOIN "User_Penawaran" ON "User_PO"."no_penawaran" = "User_Penawaran"."no_penawaran"
+      LEFT JOIN "User_Product" ON "User_Penawaran"."id_product" = "User_Product"."id_product"
+      LEFT JOIN "mst_kurs" ON "User_Product"."id_kurs" = "mst_kurs"."id_kurs"
+      LEFT JOIN "mst_satuan" ON "User_Product"."id_satuan" = "mst_satuan"."id_satuan"
+      WHERE "User_Penawaran"."id_user" = ${Number(id_user)}
+    `;
+    console.log(data);
+    return data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 module.exports = {
   getAllUserPO,
   getUserPO,
@@ -129,4 +128,5 @@ module.exports = {
   getUserPODetail,
   deleteUserPO,
   updateUserPO,
+  getUserPOByPenawaranUserId,
 };

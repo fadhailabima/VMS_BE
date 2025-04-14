@@ -27,6 +27,15 @@ const getAllUserDRM = async (req, res) => {
   }
 };
 
+const getAllVerifUserDRM = async (req, res) => {
+  try {
+    const users = await userModel.getAllVerifUserDRM();
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 const getUserById = async (req, res) => {
   const { id } = req.params;
 
@@ -81,4 +90,5 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
+  getAllVerifUserDRM
 };

@@ -4,6 +4,7 @@ const {
   getUserByEmailOrUsername,
   updateUserTokens,
   createUser,
+  getCurrentUser
 } = require("../models/User");
 
 const generateAccessToken = (user) => {
@@ -92,6 +93,15 @@ const refreshAccessToken = async (refreshToken) => {
   }
 };
 
+const getCurrentUserData = async (userId) => {
+  try {
+    const user = await getCurrentUser(userId);
+    return user;
+  } catch (error) {
+    throw new Error("Unable to get current user data");
+  }
+};
+
 const logout = async (userId) => {
   await updateUserTokens(userId, null, null);
 };
@@ -101,4 +111,5 @@ module.exports = {
   refreshAccessToken,
   logout,
   register,
+  getCurrentUserData,
 };

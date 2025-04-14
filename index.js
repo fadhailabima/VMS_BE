@@ -11,7 +11,7 @@ const cookieParser = require("cookie-parser");
 const port = process.env.PORT || 8080;
 
 const corsOptions = {
-  origin: process.env.WEB_URL || "http://localhost:3000",
+  origin: process.env.WEB_URL || "http://localhost:3001",
   httpOnly: false,
 };
 

@@ -119,19 +119,22 @@ async function seeder() {
     const jenis_product = await prisma.mst_jenis_product.createMany({
       data: [
         {
-          nama_jenis_product: "Mineral",
+          nama_jenis_product: "Alat Medis Diagnostik",
         },
         {
-          nama_jenis_product: "Aquaculture",
+          nama_jenis_product: "Peralatan Bedah & Instrumen Medis",
         },
         {
-          nama_jenis_product: "Horticultural",
+          nama_jenis_product: "Peralatan Rumah Sakit & Klinik",
         },
         {
-          nama_jenis_product: "Agricultural",
+          nama_jenis_product: "Alat Kesehatan Umum",
         },
         {
-          nama_jenis_product: "Farm Fields",
+          nama_jenis_product: "Reagen & Bahan Medis Habis Pakai",
+        },
+        {
+          nama_jenis_product: "Perangkat Digital & Telemedisin",
         },
       ],
     });
@@ -139,57 +142,57 @@ async function seeder() {
     const status = await prisma.mst_status.createMany({
       data: [
         {
-          kode_status: "VMSWPI00001",
+          kode_status: "SMS00001",
           nama_status: "Terverifikasi",
           group_status: "status_verifikasi_drm",
         },
         {
-          kode_status: "VMSWPI00002",
+          kode_status: "SMS00002",
           nama_status: "Tolak",
           group_status: "status_verifikasi_drm",
         },
         {
-          kode_status: "VMSWPI00003",
+          kode_status: "SMS00003",
           nama_status: "Penawaran Diajukan",
           group_status: "status_proses_penawaran",
         },
         {
-          kode_status: "VMSWPI00004",
+          kode_status: "SMS00004",
           nama_status: "Penawaran Dipilih Staff",
           group_status: "status_proses_penawaran",
         },
         {
-          kode_status: "VMSWPI00005",
+          kode_status: "SMS00005",
           nama_status: "Penawaran Dipilih Manager",
           group_status: "status_proses_penawaran",
         },
         {
-          kode_status: "VMSWPI00006",
+          kode_status: "SMS00006",
           nama_status: "Penawaran Ditolak Staff",
           group_status: "status_proses_penawaran",
         },
         {
-          kode_status: "VMSWPI00007",
+          kode_status: "SMS00007",
           nama_status: "Penawaran Ditolak Manager",
           group_status: "status_proses_penawaran",
         },
         {
-          kode_status: "VMSWPI00008",
+          kode_status: "SMS00008",
           nama_status: "Berlaku",
           group_status: "status_penawaran",
         },
         {
-          kode_status: "VMSWPI00009",
+          kode_status: "SMS00009",
           nama_status: "Tidak Berlaku",
           group_status: "status_penawaran",
         },
         {
-          kode_status: "VMSWPI00010",
+          kode_status: "SMS00010",
           nama_status: "Sudah Upload",
           group_status: "status_upload_document",
         },
         {
-          kode_status: "VMSWPI00011",
+          kode_status: "SMS00011",
           nama_status: "Belum Upload",
           group_status: "status_upload_document",
         },
@@ -201,43 +204,32 @@ async function seeder() {
     const user = await prisma.user.createMany({
       data: [
         {
-          npwp: "123",
-          email: "ptwpi@gmail.com",
-          username: "ptwpi",
-          password: hashedPassword,
-          nama_perusahaan: "PT Warung Pangan Indonesia",
-          nama_pic: "Farhan",
-          no_telephone: "085710116209",
-          id_role: 1,
-          id_status: 1,
-        },
-        {
           nip: "001",
-          email: "staff@ptwpi.co.id",
+          email: "staff@ptpbn.co.id",
           username: "staff",
           password: hashedPassword,
-          nama_perusahaan: "PT Warung Pangan Indonesia",
-          nama_pic: "Dece",
+          nama_perusahaan: "PT Parikesit Brayan Nusantara",
+          nama_pic: "Hafiz",
           no_telephone: "085710116209",
           id_role: 2,
         },
         {
           nip: "002",
-          email: "manager@ptwpi.co.id",
+          email: "manager@ptpbn.co.id",
           username: "manager",
           password: hashedPassword,
-          nama_perusahaan: "PT Warung Pangan Indonesia",
-          nama_pic: "Farhan DC",
+          nama_perusahaan: "PT Parikesit Brayan Nusantara",
+          nama_pic: "Fadhail A Bima",
           no_telephone: "085710116209",
           id_role: 3,
         },
         {
           nip: "003",
-          email: "admin@ptwpi.co.id",
+          email: "admin@ptpbn.co.id",
           username: "admin",
           password: hashedPassword,
-          nama_perusahaan: "PT Warung Pangan Indonesia",
-          nama_pic: "Farhan Dwicahyo",
+          nama_perusahaan: "PT Parikesit Brayan Nusantara",
+          nama_pic: "Randi Parikesit",
           no_telephone: "085710116209",
           id_role: 4,
         },

@@ -17,35 +17,43 @@ const updateUserTokens = async (userId, accessToken, refreshToken) => {
 };
 
 const getAllUsers = async () => {
-  // return await prisma.user.findMany();
   return await prisma.$queryRaw`
-  SELECT user.id_user, user.nip, user.email, user.username, user.nama_perusahaan, user.nama_pic, user.no_telephone, user.npwp, mst_role.nama_role, user.id_status FROM user
-  LEFT JOIN mst_role ON user.id_role = mst_role.id_role
-  
-`;
+    SELECT 
+      "User".id_user, 
+      "User".nip, 
+      "User".email, 
+      "User".username, 
+      "User".nama_perusahaan, 
+      "User".nama_pic, 
+      "User".no_telephone, 
+      "User".npwp, 
+      "mst_role".nama_role, 
+      "User".id_status 
+    FROM "User"
+    LEFT JOIN "mst_role" ON "user".id_role = "mst_role".id_role
+  `;
 };
 
 const getAllUserInternal = async () => {
-  // return await prisma.user.findMany();
   const users = await prisma.$queryRaw`
-  SELECT 
-    user.id_user, 
-    user.nip, 
-    user.email, 
-    user.username, 
-    user.nama_perusahaan, 
-    user.nama_pic, 
-    user.no_telephone, 
-    user.npwp, 
-    mst_role.nama_role, 
-    user.id_status 
-  FROM 
-    user
-  LEFT JOIN 
-    mst_role ON user.id_role = mst_role.id_role
-  WHERE 
-    user.id_role IN (2, 3);
-`;
+    SELECT 
+      "User".id_user, 
+      "User".nip, 
+      "User".email, 
+      "User".username, 
+      "User".nama_perusahaan, 
+      "User".nama_pic, 
+      "User".no_telephone, 
+      "User".npwp, 
+      "mst_role".nama_role, 
+      "User".id_status 
+    FROM 
+      "User"
+    LEFT JOIN 
+      "mst_role" ON "User".id_role = "mst_role".id_role
+    WHERE 
+      "User".id_role IN (2, 3);
+  `;
 
   return users;
 };
@@ -53,26 +61,26 @@ const getAllUserInternal = async () => {
 const getAllUserDRM = async () => {
   const users = await prisma.$queryRaw`
   SELECT 
-    user.id_user, 
-    user.nip, 
-    user.email, 
-    user.username, 
-    user.nama_perusahaan, 
-    user.nama_pic, 
-    user.no_telephone, 
-    user.npwp, 
+    "User".id_user, 
+    "User".nip, 
+    "User".email, 
+    "User".username, 
+    "User".nama_perusahaan, 
+    "User".nama_pic, 
+    "User".no_telephone, 
+    "User".npwp, 
     mst_role.nama_role, 
     mst_status.nama_status,
-    user.id_status
+    "User".id_status
   FROM 
-    user
+    "User"
   LEFT JOIN 
-    mst_role ON user.id_role = mst_role.id_role
+    mst_role ON "User".id_role = mst_role.id_role
   LEFT JOIN
-    mst_status ON user.id_status = mst_status.id_status
+    mst_status ON "User".id_status = mst_status.id_status
   WHERE 
-    user.id_role = 1;
-`;
+    mst_role.nama_role = 'Vendor';
+  `;
 
   return users;
 };
@@ -80,6 +88,13 @@ const getAllUserDRM = async () => {
 const getUserById = async (id) => {
   return await prisma.user.findUnique({
     where: { id_user: id },
+    include: {
+      role: {
+        select: {
+          nama_role: true,
+        },
+      },
+    },
   });
 };
 
@@ -107,6 +122,54 @@ const deleteUser = async (id) => {
   });
 };
 
+const getCurrentUser = async (userId) => {
+  return await prisma.user.findUnique({
+    where: { id_user: userId },
+    select: {
+      id_user: true,
+      email: true,
+      username: true,
+      nama_perusahaan: true,
+      nama_pic: true,
+      no_telephone: true,
+      npwp: true,
+      role: {
+        select: {
+          nama_role: true,
+        },
+      },
+      id_status: true,
+    },
+  });
+};
+
+const getAllVerifUserDRM = async () => {
+  const users = await prisma.$queryRaw`
+  SELECT 
+    "User".id_user, 
+    "User".nip, 
+    "User".email, 
+    "User".username, 
+    "User".nama_perusahaan, 
+    "User".nama_pic, 
+    "User".no_telephone, 
+    "User".npwp, 
+    mst_role.nama_role, 
+    mst_status.nama_status,
+    "User".id_status
+  FROM 
+    "User"
+  LEFT JOIN 
+    mst_role ON "User".id_role = mst_role.id_role
+  LEFT JOIN
+    mst_status ON "User".id_status = mst_status.id_status
+  WHERE 
+    mst_role.nama_role = 'Vendor' AND mst_status.nama_status = 'Terverifikasi';
+  `;
+
+  return users;
+};
+
 module.exports = {
   getAllUsers,
   getAllUserInternal,
@@ -117,4 +180,6 @@ module.exports = {
   deleteUser,
   getUserByEmailOrUsername,
   updateUserTokens,
+  getCurrentUser,
+  getAllVerifUserDRM,
 };

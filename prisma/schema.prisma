@@ -80,7 +80,7 @@ model User_Product {
   satuan           mst_satuan        @relation(fields: [id_satuan], references: [id_satuan])
   address          String
   item_image       String
-  description      String
+  description      String?
   id_jenis_product Int
   jenis_product    mst_jenis_product @relation(fields: [id_jenis_product], references: [id_jenis_product])
   id_provinsi      Int
@@ -129,7 +129,7 @@ model User_Penawaran {
   tanggal_berakhir_penawaran DateTime
   Terms_of_Payment           String
   Terms_of_Delivery          String
-  description                String
+  description                String?
   createdAt                  DateTime     @default(now())
   updatedAt                  DateTime     @default(now()) @updatedAt
   PO                         User_PO[]
@@ -149,7 +149,7 @@ model User_PO {
   tanggal_berakhir_po DateTime
   Terms_of_Payment    String
   Terms_of_Delivery   String
-  description         String
+  description         String?
   createdAt           DateTime       @default(now())
   updatedAt           DateTime       @default(now()) @updatedAt
 }

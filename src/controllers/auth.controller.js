@@ -82,9 +82,35 @@ const register = async (req, res) => {
   }
 };
 
+const getCurrentUser = async (req, res) => {
+  const authHeader = req.headers.authorization;
+
+  try {
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      throw new Error("Bearer token is required in Authorization header");
+    }
+
+    const accessToken = authHeader.split(" ")[1];
+
+    const decodedAccessToken = jwt.verify(
+      accessToken,
+      process.env.ACCESS_TOKEN_SECRET
+    );
+
+    const userId = decodedAccessToken.id;
+
+    const user = await authService.getCurrentUserData(userId);
+
+    res.status(200).json({ user });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   login,
   refreshAccessToken,
   logout,
   register,
+  getCurrentUser,
 };

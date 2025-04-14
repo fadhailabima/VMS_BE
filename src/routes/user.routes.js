@@ -7,6 +7,7 @@ const {
   createUser,
   updateUser,
   deleteUser,
+  getAllVerifUserDRM,
 } = require("../controllers/user.controller");
 const {
   authenticateToken,
@@ -27,6 +28,12 @@ router.get(
   authenticateToken,
   authorizeRoles([2, 3, 4]),
   getAllUserDRM
+);
+router.get(
+  "/userVerifDRM",
+  authenticateToken,
+  authorizeRoles([2, 3, 4]),
+  getAllVerifUserDRM
 );
 router.get(
   "/:id",

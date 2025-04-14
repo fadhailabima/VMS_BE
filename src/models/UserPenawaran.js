@@ -3,153 +3,118 @@ const prisma = new PrismaClient();
 
 const getAllUserPenawaran = async () => {
   return await prisma.$queryRaw`
-      SELECT 
-      user_penawaran.id_penawaran,
-          user_penawaran.no_penawaran,
-          user_product.id_product,
-          user_product.brand,
-          user_product.price,
-          user_penawaran.id_product,
-          mst_kurs.id_kurs,
-          mst_kurs.nama_kurs,
-          user_product.stock,
-          mst_satuan.id_satuan,
-          mst_satuan.nama_satuan,
-          user_penawaran.tanggal_dibuat_penawaran,
-          user_penawaran.tanggal_mulai_penawaran,
-          user_penawaran.tanggal_berakhir_penawaran,
-          user_penawaran.Terms_of_Payment,
-          user_penawaran.Terms_of_Delivery,
-          user_penawaran.description,
-          status_penawaran.id_status AS id_status_penawaran,
-          status_proses.id_status AS id_status_proses_penawaran,
-          status_penawaran.nama_status AS nama_status_penawaran,
-          status_proses.nama_status AS nama_status_proses_penawaran
-      FROM user_penawaran 
-      LEFT JOIN user_product ON user_penawaran.id_product = user_product.id_product
-      LEFT JOIN mst_kurs ON user_product.id_kurs = mst_kurs.id_kurs
-      LEFT JOIN mst_satuan ON user_product.id_satuan = mst_satuan.id_satuan
-      LEFT JOIN mst_status AS status_penawaran ON user_penawaran.id_status_penawaran = status_penawaran.id_status
-      LEFT JOIN mst_status AS status_proses ON user_penawaran.id_status_proses_penawaran = status_proses.id_status;
-    `;
+    SELECT 
+      "User_Penawaran".id_penawaran,
+      "User_Penawaran".no_penawaran,
+      "User_Product".id_product,
+      "User_Product".brand,
+      "User_Product".price,
+      "User_Penawaran".id_product,
+      "mst_kurs".id_kurs,
+      "mst_kurs".nama_kurs,
+      "User_Product".stock,
+      "mst_satuan".id_satuan,
+      "mst_satuan".nama_satuan,
+      "User_Penawaran".tanggal_dibuat_penawaran,
+      "User_Penawaran".tanggal_mulai_penawaran,
+      "User_Penawaran".tanggal_berakhir_penawaran,
+      "User_Penawaran"."Terms_of_Payment",
+      "User_Penawaran"."Terms_of_Delivery",
+      "User_Penawaran".description,
+      "status_penawaran".id_status AS id_status_penawaran,
+      "status_proses".id_status AS id_status_proses_penawaran,
+      "status_penawaran".nama_status AS nama_status_penawaran,
+      "status_proses".nama_status AS nama_status_proses_penawaran
+    FROM "User_Penawaran"
+    LEFT JOIN "User_Product" ON "User_Penawaran".id_product = "User_Product".id_product
+    LEFT JOIN "mst_kurs" ON "User_Product".id_kurs = "mst_kurs".id_kurs
+    LEFT JOIN "mst_satuan" ON "User_Product".id_satuan = "mst_satuan".id_satuan
+    LEFT JOIN "mst_status" AS "status_penawaran" ON "User_Penawaran".id_status_penawaran = "status_penawaran".id_status
+    LEFT JOIN "mst_status" AS "status_proses" ON "User_Penawaran".id_status_proses_penawaran = "status_proses".id_status;
+  `;
 };
-
 const getUserPenawaranByManager = async () => {
-  const data = await prisma.$queryRaw`
-        SELECT 
-          user_penawaran.id_penawaran,
-          user_penawaran.no_penawaran,
-          user_product.brand,
-          user_product.price,
-          mst_kurs.nama_kurs,
-          user_product.stock,
-          mst_satuan.nama_satuan,
-          user_penawaran.tanggal_dibuat_penawaran,
-          user_penawaran.tanggal_mulai_penawaran,
-          user_penawaran.tanggal_berakhir_penawaran,
-          user_penawaran.Terms_of_Payment,
-          user_penawaran.Terms_of_Delivery,
-          user_penawaran.description,
-          user_penawaran.id_status_penawaran,
-          user_penawaran.id_status_proses_penawaran,
-          status_penawaran.nama_status AS nama_status_penawaran,
-          status_proses.nama_status AS nama_status_proses_penawaran
-      FROM user_penawaran 
-      LEFT JOIN user_product ON user_penawaran.id_product = user_product.id_product
-      LEFT JOIN mst_kurs ON user_product.id_kurs = mst_kurs.id_kurs
-      LEFT JOIN mst_satuan ON user_product.id_satuan = mst_satuan.id_satuan
-      LEFT JOIN mst_status AS status_penawaran ON user_penawaran.id_status_penawaran = status_penawaran.id_status
-      LEFT JOIN mst_status AS status_proses ON user_penawaran.id_status_proses_penawaran = status_proses.id_status
-      WHERE user_penawaran.id_status_proses_penawaran IN (4,5,7)
-            `;
-  return data;
-  //   return await prisma.$queryRaw`
-  //     SELECT
-  //     user_penawaran.no_penawaran,
-  //           user_product.brand,
-  //           user_product.price,
-  //           user_penawaran.id_product,
-  //           mst_kurs.id_kurs,
-  //           mst_kurs.nama_kurs,
-  //           user_product.stock,
-  //           mrs_satuan.id_satuan,
-  //           mst_satuan.nama_satuan,
-  //           user_penawaran.tanggal_dibuat_penawaran,
-  //           user_penawaran.tanggal_mulai_penawaran,
-  //           user_penawaran.tanggal_berakhir_penawaran,
-  //           user_penawaran.Terms_of_Payment,
-  //           user_penawaran.Terms_of_Delivery,
-  //           user_penawaran.description,
-  //           status_penawaran.id_status AS id_status_penawaran,
-  //           status_proses.id_status AS id_status_proses_penawaran,
-  //           status_penawaran.nama_status AS nama_status_penawaran,
-  //           status_proses.nama_status AS nama_status_proses_penawaran
-  // FROM
-  //     user_penawaran
-  // LEFT JOIN
-  //     user_product ON user_penawaran.id_product = user_product.id_product
-  // LEFT JOIN
-  //     mst_kurs ON user_product.id_kurs = mst_kurs.id_kurs
-  // LEFT JOIN
-  //     mst_satuan ON user_product.id_satuan = mst_satuan.id_satuan
-  // LEFT JOIN
-  //     mst_status AS status_penawaran ON user_penawaran.id_status_penawaran = status_penawaran.id_status
-  // LEFT JOIN
-  //     mst_status AS status_proses ON user_penawaran.id_status_proses_penawaran = status_proses.id_status
-  // WHERE
-  //     status_penawaran.nama_status IN ('Berlaku','Tidak Berlaku')
-  //     AND
-  //     status_proses.nama_status IN ('Penawaran Dipilih Staff', 'Penawaran Dipilih Manager', 'Penawaran Ditolak Manager');
-  //     `;
+  try {
+    const data = await prisma.$queryRaw`
+      SELECT 
+        "User_Penawaran"."id_penawaran",
+        "User_Penawaran"."no_penawaran",
+        "User_Product"."brand",
+        "User_Product"."price",
+        "mst_kurs"."nama_kurs",
+        "User_Product"."stock",
+        "mst_satuan"."nama_satuan",
+        "User_Penawaran"."tanggal_dibuat_penawaran",
+        "User_Penawaran"."tanggal_mulai_penawaran",
+        "User_Penawaran"."tanggal_berakhir_penawaran",
+        "User_Penawaran"."Terms_of_Payment",
+        "User_Penawaran"."Terms_of_Delivery",
+        "User_Penawaran"."description",
+        "User_Penawaran"."id_status_penawaran",
+        "User_Penawaran"."id_status_proses_penawaran",
+        "status_penawaran"."nama_status" AS "nama_status_penawaran",
+        "status_proses"."nama_status" AS "nama_status_proses_penawaran"
+      FROM "User_Penawaran"
+      LEFT JOIN "User_Product" ON "User_Penawaran"."id_product" = "User_Product"."id_product"
+      LEFT JOIN "mst_kurs" ON "User_Product"."id_kurs" = "mst_kurs"."id_kurs"
+      LEFT JOIN "mst_satuan" ON "User_Product"."id_satuan" = "mst_satuan"."id_satuan"
+      LEFT JOIN "mst_status" AS "status_penawaran" ON "User_Penawaran"."id_status_penawaran" = "status_penawaran"."id_status"
+      LEFT JOIN "mst_status" AS "status_proses" ON "User_Penawaran"."id_status_proses_penawaran" = "status_proses"."id_status"
+      WHERE "User_Penawaran"."id_status_proses_penawaran" IN (4, 5, 7)
+    `;
+    return data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
 
 const getUserPenawaranDetail = async (id) => {
   try {
     const data = await prisma.$queryRaw`
-    SELECT
-        user_penawaran.id_penawaran, 
-        user_penawaran.no_penawaran,
-        user.nama_perusahaan,
-        user.nama_pic,
-        user.no_telephone,
-        user_product.brand, 
-        user_product.price, 
-        mst_kurs.nama_kurs, 
-        user_product.stock, 
-        user_product.volume, 
-        mst_satuan.nama_satuan, 
-        user_product.id_product,
-        user_product.address, 
-        user_product.item_image, 
-        user_product.description AS product_description, 
-        mst_jenis_product.nama_jenis_product, 
-        mst_provinsi.nama_provinsi, 
-        mst_kota.nama_kota, 
-        user_product.company_category, 
-        user_product.storage_type, 
-        user_product.packaging, 
-        user_penawaran.tanggal_dibuat_penawaran,
-        user_penawaran.tanggal_mulai_penawaran,
-        user_penawaran.tanggal_berakhir_penawaran,
-        user_penawaran.Terms_of_Payment,
-        user_penawaran.Terms_of_Delivery,
-        user_penawaran.description AS penawaran_description,
-        status_penawaran.id_status AS id_status_penawaran,
-        status_proses.id_status AS id_status_proses_penawaran,
-        status_penawaran.nama_status AS nama_status_penawaran,
-        status_proses.nama_status AS nama_status_proses_penawaran
-    FROM user_penawaran 
-    LEFT JOIN User ON user_penawaran.id_penawaran = user.id_user 
-    LEFT JOIN user_product ON user_penawaran.id_product = user_product.id_product
-    LEFT JOIN mst_kurs ON user_product.id_kurs = mst_kurs.id_kurs
-    LEFT JOIN mst_satuan ON user_product.id_satuan = mst_satuan.id_satuan
-    LEFT JOIN mst_jenis_product ON user_product.id_jenis_product = mst_jenis_product.id_jenis_product
-    LEFT JOIN mst_provinsi ON user_product.id_provinsi = mst_provinsi.id_provinsi
-    LEFT JOIN mst_kota ON user_product.id_kota = mst_kota.id_kota
-    LEFT JOIN mst_status AS status_penawaran ON user_penawaran.id_status_penawaran = status_penawaran.id_status
-    LEFT JOIN mst_status AS status_proses ON user_penawaran.id_status_proses_penawaran = status_proses.id_status
-    WHERE user_penawaran.id_penawaran =  ${Number(id)}
-  `;
+      SELECT
+        "User_Penawaran"."id_penawaran", 
+        "User_Penawaran"."no_penawaran",
+        "User"."nama_perusahaan",
+        "User"."nama_pic",
+        "User"."no_telephone",
+        "User_Product"."brand", 
+        "User_Product"."price", 
+        "mst_kurs"."nama_kurs", 
+        "User_Product"."stock", 
+        "User_Product"."volume", 
+        "mst_satuan"."nama_satuan", 
+        "User_Product"."id_product",
+        "User_Product"."address", 
+        "User_Product"."item_image", 
+        "User_Product"."description" AS "product_description", 
+        "mst_jenis_product"."nama_jenis_product", 
+        "mst_provinsi"."nama_provinsi", 
+        "mst_kota"."nama_kota", 
+        "User_Product"."company_category", 
+        "User_Product"."storage_type", 
+        "User_Product"."packaging", 
+        "User_Penawaran"."tanggal_dibuat_penawaran",
+        "User_Penawaran"."tanggal_mulai_penawaran",
+        "User_Penawaran"."tanggal_berakhir_penawaran",
+        "User_Penawaran"."Terms_of_Payment",
+        "User_Penawaran"."Terms_of_Delivery",
+        "User_Penawaran"."description" AS "penawaran_description",
+        "status_penawaran"."id_status" AS "id_status_penawaran",
+        "status_proses"."id_status" AS "id_status_proses_penawaran",
+        "status_penawaran"."nama_status" AS "nama_status_penawaran",
+        "status_proses"."nama_status" AS "nama_status_proses_penawaran"
+      FROM "User_Penawaran"
+      LEFT JOIN "User" ON "User_Penawaran"."id_user" = "User"."id_user"
+      LEFT JOIN "User_Product" ON "User_Penawaran"."id_product" = "User_Product"."id_product"
+      LEFT JOIN "mst_kurs" ON "User_Product"."id_kurs" = "mst_kurs"."id_kurs"
+      LEFT JOIN "mst_satuan" ON "User_Product"."id_satuan" = "mst_satuan"."id_satuan"
+      LEFT JOIN "mst_jenis_product" ON "User_Product"."id_jenis_product" = "mst_jenis_product"."id_jenis_product"
+      LEFT JOIN "mst_provinsi" ON "User_Product"."id_provinsi" = "mst_provinsi"."id_provinsi"
+      LEFT JOIN "mst_kota" ON "User_Product"."id_kota" = "mst_kota"."id_kota"
+      LEFT JOIN "mst_status" AS "status_penawaran" ON "User_Penawaran"."id_status_penawaran" = "status_penawaran"."id_status"
+      LEFT JOIN "mst_status" AS "status_proses" ON "User_Penawaran"."id_status_proses_penawaran" = "status_proses"."id_status"
+      WHERE "User_Penawaran"."id_penawaran" = ${Number(id)}
+    `;
     console.log(data);
     return data;
   } catch (error) {
@@ -160,34 +125,34 @@ const getUserPenawaranDetail = async (id) => {
 const getUserPenawaranByIdUser = async (userId) => {
   try {
     const data = await prisma.$queryRaw`
-    SELECT 
-        user_penawaran.id_penawaran,
-        user_penawaran.no_penawaran,
-        user_product.brand,
-        user_product.price,
-        mst_kurs.id_kurs,
-        mst_kurs.nama_kurs,
-        user_product.stock,
-        mst_satuan.id_satuan,
-        mst_satuan.nama_satuan,
-        user_penawaran.tanggal_dibuat_penawaran,
-        user_penawaran.tanggal_mulai_penawaran,
-        user_penawaran.tanggal_berakhir_penawaran,
-        user_penawaran.Terms_of_Payment,
-        user_penawaran.Terms_of_Delivery,
-        user_penawaran.description,
-        status_penawaran.id_status AS id_status_penawaran,
-        status_penawaran.nama_status AS nama_status_penawaran,
-        status_proses.id_status AS id_status_proses_penawaran,
-        status_proses.nama_status AS nama_status_proses_penawaran
-    FROM user_penawaran 
-    LEFT JOIN user_product ON user_penawaran.id_product = user_product.id_product
-    LEFT JOIN mst_kurs ON user_product.id_kurs = mst_kurs.id_kurs
-    LEFT JOIN mst_satuan ON user_product.id_satuan = mst_satuan.id_satuan
-    LEFT JOIN mst_status AS status_penawaran ON user_penawaran.id_status_penawaran = status_penawaran.id_status
-    LEFT JOIN mst_status AS status_proses ON user_penawaran.id_status_proses_penawaran = status_proses.id_status
-    WHERE user_penawaran.id_user =  ${Number(userId)}
-  `;
+      SELECT 
+        "User_Penawaran"."id_penawaran",
+        "User_Penawaran"."no_penawaran",
+        "User_Product"."brand",
+        "User_Product"."price",
+        "mst_kurs"."id_kurs",
+        "mst_kurs"."nama_kurs",
+        "User_Product"."stock",
+        "mst_satuan"."id_satuan",
+        "mst_satuan"."nama_satuan",
+        "User_Penawaran"."tanggal_dibuat_penawaran",
+        "User_Penawaran"."tanggal_mulai_penawaran",
+        "User_Penawaran"."tanggal_berakhir_penawaran",
+        "User_Penawaran"."Terms_of_Payment",
+        "User_Penawaran"."Terms_of_Delivery",
+        "User_Penawaran"."description",
+        "status_penawaran"."id_status" AS "id_status_penawaran",
+        "status_penawaran"."nama_status" AS "nama_status_penawaran",
+        "status_proses"."id_status" AS "id_status_proses_penawaran",
+        "status_proses"."nama_status" AS "nama_status_proses_penawaran"
+      FROM "User_Penawaran"
+      LEFT JOIN "User_Product" ON "User_Penawaran"."id_product" = "User_Product"."id_product"
+      LEFT JOIN "mst_kurs" ON "User_Product"."id_kurs" = "mst_kurs"."id_kurs"
+      LEFT JOIN "mst_satuan" ON "User_Product"."id_satuan" = "mst_satuan"."id_satuan"
+      LEFT JOIN "mst_status" AS "status_penawaran" ON "User_Penawaran"."id_status_penawaran" = "status_penawaran"."id_status"
+      LEFT JOIN "mst_status" AS "status_proses" ON "User_Penawaran"."id_status_proses_penawaran" = "status_proses"."id_status"
+      WHERE "User_Penawaran"."id_user" = ${Number(userId)}
+    `;
     console.log(data);
     return data;
   } catch (error) {
@@ -198,44 +163,44 @@ const getUserPenawaranByIdUser = async (userId) => {
 const getUserPenawaranSummaryByIdUser = async (userId) => {
   try {
     const data = await prisma.$queryRaw`
-    SELECT
-        COUNT(user_penawaran.id_penawaran) AS total_penawaran
-    FROM user_penawaran
-    WHERE user_penawaran.id_user = ${Number(userId)}
-  `;
-
-    return data[0];
+      SELECT
+        COUNT("id_penawaran")::text AS "total_penawaran"
+      FROM "User_Penawaran"
+      WHERE "id_user" = ${BigInt(userId)}
+    `;
+    return { total_penawaran: data[0].total_penawaran };
   } catch (error) {
     throw new Error(error.message);
   }
 };
-
 const getUserPenawaranByStatusPenawaran = async (statuspenawaranId) => {
   try {
     const data = await prisma.$queryRaw`
-        SELECT 
-            user_penawaran.no_penawaran,
-            user_product.brand,
-            user_product.price,
-            mst_kurs.nama_kurs,
-            user_product.stock,
-            mst_satuan.nama_satuan,
-            user_penawaran.tanggal_dibuat_penawaran,
-            user_penawaran.tanggal_mulai_penawaran,
-            user_penawaran.tanggal_berakhir_penawaran,
-            user_penawaran.Terms_of_Payment,
-            user_penawaran.Terms_of_Delivery,
-            user_penawaran.description,
-            status_penawaran.nama_status AS nama_status_penawaran,
-            status_proses.nama_status AS nama_status_proses_penawaran
-        FROM user_penawaran 
-        LEFT JOIN user_product ON user_penawaran.id_product = user_product.id_product
-        LEFT JOIN mst_kurs ON user_product.id_kurs = mst_kurs.id_kurs
-        LEFT JOIN mst_satuan ON user_product.id_satuan = mst_satuan.id_satuan
-        LEFT JOIN mst_status AS status_penawaran ON user_penawaran.id_status_penawaran = status_penawaran.id_status
-        LEFT JOIN mst_status AS status_proses ON user_penawaran.id_status_proses_penawaran = status_proses.id_status
-        WHERE user_penawaran.id_status_penawaran = ${Number(statuspenawaranId)}
-          `;
+      SELECT 
+        "User_Penawaran"."no_penawaran",
+        "User_Product"."brand",
+        "User_Product"."price",
+        "mst_kurs"."nama_kurs",
+        "User_Product"."stock",
+        "mst_satuan"."nama_satuan",
+        "User_Penawaran"."tanggal_dibuat_penawaran",
+        "User_Penawaran"."tanggal_mulai_penawaran",
+        "User_Penawaran"."tanggal_berakhir_penawaran",
+        "User_Penawaran"."Terms_of_Payment",
+        "User_Penawaran"."Terms_of_Delivery",
+        "User_Penawaran"."description",
+        "status_penawaran"."nama_status" AS "nama_status_penawaran",
+        "status_proses"."nama_status" AS "nama_status_proses_penawaran"
+      FROM "User_Penawaran"
+      LEFT JOIN "User_Product" ON "User_Penawaran"."id_product" = "User_Product"."id_product"
+      LEFT JOIN "mst_kurs" ON "User_Product"."id_kurs" = "mst_kurs"."id_kurs"
+      LEFT JOIN "mst_satuan" ON "User_Product"."id_satuan" = "mst_satuan"."id_satuan"
+      LEFT JOIN "mst_status" AS "status_penawaran" ON "User_Penawaran"."id_status_penawaran" = "status_penawaran"."id_status"
+      LEFT JOIN "mst_status" AS "status_proses" ON "User_Penawaran"."id_status_proses_penawaran" = "status_proses"."id_status"
+      WHERE "User_Penawaran"."id_status_penawaran" = ${Number(
+        statuspenawaranId
+      )}
+    `;
     return data;
   } catch (error) {
     throw new Error(error.message);
@@ -247,35 +212,35 @@ const getUserPenawaranByStatusProsesPenawaran = async (
 ) => {
   try {
     const data = await prisma.$queryRaw`
-        SELECT 
-          user_penawaran.id_penawaran,
-          user_penawaran.no_penawaran,
-          user_product.id_product,
-          user_product.brand,
-          user_product.price,
-          mst_kurs.nama_kurs,
-          user_product.stock,
-          mst_satuan.nama_satuan,
-          user_penawaran.tanggal_dibuat_penawaran,
-          user_penawaran.tanggal_mulai_penawaran,
-          user_penawaran.tanggal_berakhir_penawaran,
-          user_penawaran.Terms_of_Payment,
-          user_penawaran.Terms_of_Delivery,
-          user_penawaran.description,
-          user_penawaran.id_status_penawaran,
-          user_penawaran.id_status_proses_penawaran,
-          status_penawaran.nama_status AS nama_status_penawaran,
-          status_proses.nama_status AS nama_status_proses_penawaran
-      FROM user_penawaran 
-      LEFT JOIN user_product ON user_penawaran.id_product = user_product.id_product
-      LEFT JOIN mst_kurs ON user_product.id_kurs = mst_kurs.id_kurs
-      LEFT JOIN mst_satuan ON user_product.id_satuan = mst_satuan.id_satuan
-      LEFT JOIN mst_status AS status_penawaran ON user_penawaran.id_status_penawaran = status_penawaran.id_status
-      LEFT JOIN mst_status AS status_proses ON user_penawaran.id_status_proses_penawaran = status_proses.id_status
-      WHERE user_penawaran.id_status_proses_penawaran = ${Number(
+      SELECT 
+        "User_Penawaran"."id_penawaran",
+        "User_Penawaran"."no_penawaran",
+        "User_Product"."id_product",
+        "User_Product"."brand",
+        "User_Product"."price",
+        "mst_kurs"."nama_kurs",
+        "User_Product"."stock",
+        "mst_satuan"."nama_satuan",
+        "User_Penawaran"."tanggal_dibuat_penawaran",
+        "User_Penawaran"."tanggal_mulai_penawaran",
+        "User_Penawaran"."tanggal_berakhir_penawaran",
+        "User_Penawaran"."Terms_of_Payment",
+        "User_Penawaran"."Terms_of_Delivery",
+        "User_Penawaran"."description",
+        "User_Penawaran"."id_status_penawaran",
+        "User_Penawaran"."id_status_proses_penawaran",
+        "status_penawaran"."nama_status" AS "nama_status_penawaran",
+        "status_proses"."nama_status" AS "nama_status_proses_penawaran"
+      FROM "User_Penawaran"
+      LEFT JOIN "User_Product" ON "User_Penawaran"."id_product" = "User_Product"."id_product"
+      LEFT JOIN "mst_kurs" ON "User_Product"."id_kurs" = "mst_kurs"."id_kurs"
+      LEFT JOIN "mst_satuan" ON "User_Product"."id_satuan" = "mst_satuan"."id_satuan"
+      LEFT JOIN "mst_status" AS "status_penawaran" ON "User_Penawaran"."id_status_penawaran" = "status_penawaran"."id_status"
+      LEFT JOIN "mst_status" AS "status_proses" ON "User_Penawaran"."id_status_proses_penawaran" = "status_proses"."id_status"
+      WHERE "User_Penawaran"."id_status_proses_penawaran" = ${BigInt(
         statusprosespenawaranId
       )}
-            `;
+    `;
     return data;
   } catch (error) {
     throw new Error(error.message);
@@ -295,45 +260,36 @@ const createUserPenawaran = async (documentData) => {
       Terms_of_Delivery,
       id_status_penawaran,
       id_status_proses_penawaran,
+      description,
     } = documentData;
 
-    const response = await prisma.$queryRaw`
-        INSERT INTO User_Penawaran
-          (
-            no_penawaran,
-            id_user,
-            id_product,
-            tanggal_dibuat_penawaran,
-            tanggal_mulai_penawaran,
-            tanggal_berakhir_penawaran,
-            Terms_of_Payment,
-            Terms_of_Delivery,
-            description,
-            id_status_penawaran,
-            id_status_proses_penawaran
-          )
-        VALUES
-          (
-            ${no_penawaran},
-            ${id_user},
-            ${id_product},
-            ${tanggal_dibuat_penawaran},
-            ${tanggal_mulai_penawaran},
-            ${tanggal_berakhir_penawaran},
-            ${Terms_of_Payment},
-            ${Terms_of_Delivery},
-            "",
-            ${id_status_penawaran},
-            ${id_status_proses_penawaran}
-          )
-      `;
+    const newPenawaran = await prisma.user_Penawaran.create({
+      data: {
+        no_penawaran,
+        id_user,
+        id_product,
+        description,
+        tanggal_dibuat_penawaran: new Date(
+          tanggal_dibuat_penawaran
+        ).toISOString(),
+        tanggal_mulai_penawaran: new Date(
+          tanggal_mulai_penawaran
+        ).toISOString(),
+        tanggal_berakhir_penawaran: new Date(
+          tanggal_berakhir_penawaran
+        ).toISOString(),
+        Terms_of_Payment,
+        Terms_of_Delivery,
+        id_status_penawaran,
+        id_status_proses_penawaran,
+      },
+    });
 
-    return response;
+    return newPenawaran;
   } catch (error) {
     throw new Error(error.message);
   }
 };
-
 const updateUserPenawaran = async (id, documentData) => {
   try {
     // remove field from documentData, such as, id_penawaran, id_status_penawaran, id_status_proses_penawaran
@@ -393,7 +349,7 @@ const updateUserPenawaran = async (id, documentData) => {
 const deleteUserPenawaran = async (id) => {
   try {
     const response = await prisma.$queryRaw`
-      DELETE FROM user_penawaran WHERE id_penawaran = ${id}
+      DELETE FROM "User_Penawaran" WHERE "id_penawaran" = ${Number(id)}
     `;
 
     return response;

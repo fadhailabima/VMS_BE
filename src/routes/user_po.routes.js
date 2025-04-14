@@ -6,6 +6,7 @@ const {
   getUserPODetail,
   deleteUserPO,
   updateUserPO,
+  getUserPOByPenawaranUserId
 } = require("../controllers/user_po.controller");
 const {
   authenticateToken,
@@ -19,9 +20,16 @@ router.get("/", authenticateToken, authorizeRoles([3]), getAllUserPO);
 router.get("/userPO", authenticateToken, authorizeRoles([2, 3]), getUserPO);
 
 router.get(
+  "/user/:userId",
+  authenticateToken,
+  authorizeRoles([1, 2, 3, 4]),
+  getUserPOByPenawaranUserId
+);
+
+router.get(
   "/:id_po",
   authenticateToken,
-  authorizeRoles([2, 3]),
+  authorizeRoles([1, 2, 3, 4]),
   getUserPODetail
 );
 
@@ -30,23 +38,5 @@ router.post("/", authenticateToken, authorizeRoles([3]), createUserPO);
 router.delete("/:id", authenticateToken, authorizeRoles([3]), deleteUserPO);
 
 router.put("/:id", authenticateToken, authorizeRoles([3]), updateUserPO);
-// router.post(
-//   "/",
-//   authenticateToken,
-//   authorizeRoles([1, 2, 3, 4]),
-//   createUserPenawaran
-// );
-// router.put(
-//   "/:id",
-//   authenticateToken,
-//   authorizeRoles([1, 2, 3, 4]),
-//   updateUserPenawaran
-// );
-// router.delete(
-//   "/:id",
-//   authenticateToken,
-//   authorizeRoles([1, 2, 3, 4]),
-//   deleteUserPenawaran
-// );
 
 module.exports = router;
