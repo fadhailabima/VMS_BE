@@ -43,8 +43,8 @@ app.use("/api", routes);
 
 // sertifikat ssl
 const sslOptions = {
-  key: fs.readFileSync("./ssl/server.key"),
-  cert: fs.readFileSync("./ssl/server.cert"),
+  key: fs.readFileSync("./ssl/key.pem"),
+  cert: fs.readFileSync("./ssl/cert.pem"),
 };
 
 // https server
