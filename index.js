@@ -7,15 +7,11 @@ require("dotenv").config();
 const session = require("express-session");
 const liveReload = require("connect-livereload");
 const cookieParser = require("cookie-parser");
-const fs = require("fs");
-const https = require("https");
-const http = require("http");
 
-const port = process.env.PORT || 443; // default https port
-const httpPort = 80; // untuk redirect
+const port = process.env.PORT || 8080;
 
 const corsOptions = {
-  origin: process.env.WEB_URL || "http://localhost:3001",
+  origin: process.env.WEB_URL || "http://localhost:3000",
   httpOnly: false,
 };
 
@@ -23,6 +19,10 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+app.get("/", (req, res) => {
+  res.send("Server is running and ready for requests.");
+});
 
 app.use(
   session({
@@ -34,30 +34,12 @@ app.use(
     },
   })
 );
-
 if (process.env.NODE_ENV === "development") {
   app.use(liveReload());
 }
 
 app.use("/api", routes);
 
-// sertifikat ssl
-const sslOptions = {
-  key: fs.readFileSync("./ssl/key.pem"),
-  cert: fs.readFileSync("./ssl/cert.pem"),
-};
-
-// https server
-https.createServer(sslOptions, app).listen(port, () => {
-  console.log(`🚀 HTTPS Server running at https://your-public-ip:${port}`);
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
-
-// redirect dari http ke https
-http
-  .createServer((req, res) => {
-    res.writeHead(301, {
-      Location: `https://${req.headers.host}${req.url}`,
-    });
-    res.end();
-  })
-  .listen(httpPort);
