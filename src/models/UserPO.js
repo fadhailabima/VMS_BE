@@ -42,17 +42,27 @@ const createUserPO = async (data) => {
 };
 
 const getUserPODetail = async (id_po) => {
-  // console.log("id_po", id_po);
   const data = await prisma.user_PO.findUnique({
     where: {
       id_po: Number(id_po),
     },
     include: {
       penawaran: {
-        include: { status_penawaran: true, status_proses_penawaran: true },
+        include: {
+          status_penawaran: true,
+          status_proses_penawaran: true,
+        },
       },
       user: true,
-      product: true,
+      product: {
+        include: {
+          kurs: true, // Relasi ke mst_kurs
+          satuan: true, // Relasi ke mst_satuan
+          jenis_product: true, // Relasi ke mst_jenis_product
+          provinsi: true, // Relasi ke mst_provinsi
+          kota: true, // Relasi ke mst_kota
+        },
+      },
     },
   });
 

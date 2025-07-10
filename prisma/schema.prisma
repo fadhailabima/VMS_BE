@@ -46,7 +46,7 @@ model User_Document {
   tanggal_berlaku   DateTime
   tanggal_berakhir  DateTime
   id_status         Int
-  status            mst_status         @relation(fields: [id_status], references: [id_status])
+  status            d         @relation(fields: [id_status], references: [id_status])
   file              String
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @default(now()) @updatedAt
@@ -119,7 +119,7 @@ model User_Penawaran {
   id_user                    Int
   user                       User         @relation(fields: [id_user], references: [id_user])
   id_status_proses_penawaran Int
-  status_proses_penawaran    mst_status   @relation(name: "StatusProsesPenawaran", fields: [id_status_proses_penawaran], references: [id_status])
+  status_proses_penawaran    d   @relation(name: "StatusProsesPenawaran", fields: [id_status_proses_penawaran], references: [id_status])
   id_status_penawaran        Int
   status_penawaran           mst_status   @relation(name: "StatusPenawaran", fields: [id_status_penawaran], references: [id_status])
   id_product                 Int

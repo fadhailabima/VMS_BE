@@ -13,10 +13,17 @@ const getUserProductDetail = async (req, res) => {
   const { productId } = req.params;
   try {
     const userProduct = await userProductModel.getUserProductDetail(productId);
-    return res.status(200).json(userProduct[0]);
+    if (!userProduct) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+    return res.status(200).json(userProduct);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
+};
+
+module.exports = {
+  getUserProductDetail,
 };
 
 const getUserProductByIdUser = async (req, res) => {

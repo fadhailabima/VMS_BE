@@ -20,40 +20,54 @@ const getAllUserProducts = async () => {
 
 const getUserProductDetail = async (id) => {
   try {
-    const data = await prisma.$queryRaw`
-      SELECT  
-        "User_Product".id_product,
-        "User".nama_perusahaan,
-        "User".id_user,
-        "User_Product".brand, 
-        "User_Product".price, 
-        "mst_kurs".id_kurs, 
-        "mst_kurs".nama_kurs, 
-        "User_Product".stock, 
-        "User_Product".volume, 
-        "mst_satuan".id_satuan, 
-        "mst_satuan".nama_satuan, 
-        "User_Product".address, 
-        "User_Product".item_image, 
-        "User_Product".description, 
-        "mst_jenis_product".id_jenis_product, 
-        "mst_jenis_product".nama_jenis_product, 
-        "mst_provinsi".id_provinsi, 
-        "mst_provinsi".nama_provinsi, 
-        "mst_kota".id_kota, 
-        "mst_kota".nama_kota, 
-        "User_Product".company_category, 
-        "User_Product".storage_type, 
-        "User_Product".packaging 
-      FROM "user_product" 
-      LEFT JOIN "User" ON "user_product".id_user = "User".id_user 
-      LEFT JOIN "mst_kurs" ON "user_product".id_kurs = "mst_kurs".id_kurs
-      LEFT JOIN "mst_satuan" ON "user_product".id_satuan = "mst_satuan".id_satuan
-      LEFT JOIN "mst_jenis_product" ON "user_product".id_jenis_product = "mst_jenis_product".id_jenis_product
-      LEFT JOIN "mst_provinsi" ON "user_product".id_provinsi = "mst_provinsi".id_provinsi
-      LEFT JOIN "mst_kota" ON "user_product".id_kota = "mst_kota".id_kota
-      WHERE "user_product".id_product = ${Number(id)}
-    `;
+    const data = await prisma.user_Product.findUnique({
+      where: {
+        id_product: Number(id),
+      },
+      include: {
+        user: {
+          select: {
+            nama_perusahaan: true,
+            id_user: true,
+          },
+        },
+        kurs: {
+          select: {
+            id_kurs: true,
+            nama_kurs: true,
+          },
+        },
+        satuan: {
+          select: {
+            id_satuan: true,
+            nama_satuan: true,
+          },
+        },
+        jenis_product: {
+          select: {
+            id_jenis_product: true,
+            nama_jenis_product: true,
+          },
+        },
+        provinsi: {
+          select: {
+            id_provinsi: true,
+            nama_provinsi: true,
+          },
+        },
+        kota: {
+          select: {
+            id_kota: true,
+            nama_kota: true,
+          },
+        },
+      },
+    });
+
+    if (!data) {
+      throw new Error("Product not found");
+    }
+
     return data;
   } catch (error) {
     throw new Error(error.message);
